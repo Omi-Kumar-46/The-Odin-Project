@@ -3,53 +3,50 @@ function getComputerChoice() {
     return (choice === 0) ? "Rock" : (choice === 1) ? "Paper" : "Scissor";
 }
 
-function getUserChoice() {
-    const userChoice = prompt("Type Rock, Paper or Scissor to start playing: ");
-    return userChoice;
-}
+const userButtons = document.querySelectorAll(".play-btn");
+userButtons.forEach((buttons) => {
+    buttons.addEventListener('click', (e) => {
+        const userChoice = e.target.id;
+        playRound(userChoice, getComputerChoice());
+    })
+})
 
-function playGame() {
-    let userScore = 0, computerScore = 0;
+let userScore = 0, computerScore = 0;
 
-    function playRound(userChoice, computerChoice) {
-        userChoice = userChoice.toLowerCase();
-        computerChoice = computerChoice.toLowerCase();
+const resultDiv = document.querySelector('#results');
+let displayMssg = "";
 
-        if (userChoice === computerChoice) {
-            console.log("It's a Tie! You both chose " + userChoice);
-            console.log("You: " + userScore + " | " + "Computer: " + computerScore);
-        }
-
-        else if ((userChoice === "rock" && computerChoice === "scissor") || (userChoice === "paper" && computerChoice === "rock") || (userChoice === "scissor" && computerChoice === "paper")) {
-            userScore += 1;
-            console.log("You Win! Your " + userChoice + " beats Computer's " + computerChoice);
-            console.log("You: " + userScore + " | " + "Computer: " + computerScore);
-        }
-        else {
-            computerScore += 1;
-            console.log("You Lose! Computer's " + computerChoice + " beats your " + userChoice);
-            console.log("You: " + userScore + " | " + "Computer: " + computerScore);
-        }
+function playRound(userChoice, computerChoice) {
+    if (userChoice === computerChoice) {
+        displayMssg = "It's a Tie! You both chose " + userChoice;
     }
 
-    let i = 1;
-
-    while (i < 6) {
-        console.log("Round " + i);
-        userInput = getUserChoice();
-        computerInput = getComputerChoice();
-
-        playRound(userInput, computerInput);
-        i++;
+    else if ((userChoice === "Rock" && computerChoice === "Scissor") || (userChoice === "Paper" && computerChoice === "Rock") || (userChoice === "scissor" && computerChoice === "paper")) {
+        userScore += 1;
+        displayMssg = "You Win! Your " + userChoice + " beats Computer's " + computerChoice;
     }
 
-    const finalResult = (userScore > computerScore)
-        ? ("You Won :) by " + userScore + " : " + computerScore)
-        : (computerScore > userScore)
-            ? ("You Lost :( by " + userScore + " : " + computerScore)
-            : "It's a Tie! No one won the overall match.";
+    else {
+        computerScore += 1;
+        displayMssg = "You Lose! Computer's " + computerChoice + " beats your " + userChoice;
+    }
 
-    console.log(finalResult);
+    if (userScore === 5) {
+        displayMssg = "You are the Champion 🏆";
+        userScore = 0;
+        computerScore = 0;
+    }
+    else if (computerScore === 5) {
+        displayMssg = "Wasted, Computer Won the Game! 🤖";
+        userScore = 0;
+        computerScore = 0;
+    }
+
+    displayMssg += "<br>Score : You: " + userScore + " | " + "Computer: " + computerScore;
+
+    resultDiv.innerHTML = displayMssg;
 }
 
-playGame();
+
+
+
